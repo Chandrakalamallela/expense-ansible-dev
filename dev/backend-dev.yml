@@ -1,25 +1,37 @@
-- name: expense backend code setup
+- name: expense backend setup
   hosts: all
-  become: yes
   tasks:
-   - name: Disable mysql default version
-     ansible.builtin.shell: dnf module disable msql -y
-  - name: copy mysqlrepo
-    ansi0ble.builtin.copy:
-    src: mysql.repo
-    dest: /etc/yum.repos.d/mysql.repo
-  - name: install mysql serve
-    ansible.builtin.dnf:
-    name: mysql-community-server
-    state: present
-  - name: start my sqlservice
-    ansible.builtin.systemd:
-    name: mysqld
-    state: restarted
-    enabled: yes
-  - name: set my sql password
-    ansible.builtin.shell: mysql_secure_installation --set-root-pass {{MYSQL_ROOT_PASSWORD}}
-
+    - name: disable default version of nodejs
+      ansible.builtin.shell: dnf module disable nodejs -y
+    - name: install nodejs
+      ansible.builtin.dnf:  module enable nodejs:18 -y 
+      name: nodejs
+      state: present
+    - name: copy backend service
+      ansible.builin.file:
+      src: backend.service
+      dest: /etc/systemd/system/backend.service
+    - name: Add application user
+      ansible.builtin.user:
+      name: expense
+    - name: delete old app
+      ansible.builtin.file:
+      src: /app
+      state: absent
+    - name:create app directory
+      ansible.builtin.file:
+      path: /app
+      state: directory
+    - name: download nodejs
+     ansile.builtin.dnf:
+     name: nodejs
+    - name: download and extract app content
+      ansible.builtin.unarchive:
+      src: https://expense-artifacts.s3.amazonaws.com/backend.zip 
+      dest: /app
+      remote_src: yes
+     - name: download depensices
+      ansible.builti 
 
 
     
