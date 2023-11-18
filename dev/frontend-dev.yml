@@ -8,7 +8,7 @@
 
    - name:  copy expense config file
      ansible.builtin.copy:
-     src: expense.cnf
+     src: expense.conf
      dest: /etc/nginx/default.d/expense.conf
    - name: clean old content from nginx
       ansible.builtin.fle:
@@ -24,7 +24,7 @@
       dest: /usr/share/nginx/html
       remote_src: yes
     -name: start nginx server
-    ansible.builtin.systemctl:
+    ansible.builtin.systemmd:
     name: nginx
-    state: restart
-    enable: yes
+    state: restarted
+    enabled: yes
